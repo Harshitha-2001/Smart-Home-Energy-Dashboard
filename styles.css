@@ -1,0 +1,139 @@
+/* Sidebar */
+.sidebar {
+    width: 220px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background: #343a40;
+    color: white;
+    padding: 20px;
+}
+
+.sidebar h3 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    padding: 10px 0;
+}
+
+.sidebar ul li a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    padding: 10px;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+.sidebar ul li a:hover {
+    background: #495057;
+}
+
+/* Highlight Active Page */
+.sidebar ul li a.active {
+    background: #007bff;
+}
+
+/* Main Content */
+.main-content {
+    margin-left: 230px; /* Space for the sidebar */
+    padding: 20px;
+}
+
+/* Improve Chart Spacing */
+.dashboard-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 20px;
+}
+
+/* Responsive Design for Dashboard */
+@media (max-width: 768px) {
+    .dashboard-container {
+        grid-template-columns: 1fr; /* Stack items on smaller screens */
+    }
+}
+
+/* Standard Chart Size */
+.chart-container {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+canvas {
+    max-height: 250px; /* Uniform size */
+    width: 100% !important;
+}
+
+/* Renewable Energy Suggestions */
+.card {
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.card h4 {
+    color: #007bff;
+}
+
+#energySuggestions {
+    font-size: 16px;
+    color: #333;
+    font-weight: bold;
+}
+
+/* Dark Mode */
+body.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+.dark-mode .sidebar {
+    background: #1e1e1e;
+}
+
+.dark-mode .sidebar ul li a {
+    color: #ffffff;
+}
+
+.dark-mode .sidebar ul li a:hover {
+    background: #333333;
+}
+
+.dark-mode .card, .dark-mode .chart-container {
+    background: #222;
+    color: #ffffff;
+    border: 1px solid #444;
+}
+
+.dark-mode input, .dark-mode button {
+    background: #333;
+    color: #fff;
+    border: 1px solid #555;
+}
+
+/* Footer */
+.footer {
+    background-color: #222;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    font-size: 14px;
+}

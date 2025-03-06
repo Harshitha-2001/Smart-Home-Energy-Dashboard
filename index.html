@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Home Energy Dashboard</title>
+    
+    <!-- Bootstrap for styling -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <h3>⚡ Energy Monitor</h3>
+    <ul>
+        <li><a href="index.html">🏠 Home</a></li>
+        <li><a href="dashboard.html">📊 Dashboard</a></li>
+        <li><a href="settings.html">⚙️ Settings</a></li>
+        <li><a href="reports.html">📜 Reports</a></li>
+        <li><a href="logout.html">🚪 Logout</a></li>
+    </ul>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+    <div class="container mt-4">
+        <h2 class="text-center">Smart Home Energy Dashboard</h2>
+
+        <!-- Energy Budget Input -->
+        <div class="card p-3">
+            <label class="fw-bold">Energy Budget (kWh):</label>
+            <input type="number" id="energyBudget" class="form-control mb-2" value="500">
+            <button class="btn btn-primary" onclick="updateGraph()">Set Budget</button>
+        </div>
+
+        <!-- Charts -->
+        <div class="dashboard-container">
+            <div class="chart-container half-width">
+                <canvas id="energyChart"></canvas>
+            </div>
+            <div class="chart-container half-width">
+                <canvas id="energyLineChart"></canvas>
+            </div>
+            <div class="chart-container half-width">
+                <canvas id="energyPieChart"></canvas>
+            </div>
+            <div class="chart-container half-width">
+                <canvas id="energyDoughnutChart"></canvas>
+            </div>
+            <div class="chart-container full-width">
+                <canvas id="energyPredictionChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Renewable Energy Suggestions -->
+        <div class="card p-3 mt-4">
+            <h4 class="fw-bold">💡 Renewable Energy Suggestions</h4>
+            <p id="energySuggestions">Suggestions will appear here based on usage trends.</p>
+        </div>
+    </div>
+</div>
+<button id="darkModeToggle" class="btn btn-dark position-fixed top-0 end-0 m-3">🌙 Dark Mode</button>
+
+<!-- Custom JS -->
+<script src="script.js"></script>
+<footer class="footer">
+    <p>Developed by Harshitha S | Email: 246harshitha@gmail.com | Contact: 7676974845</p>
+</footer>
+
+</body>
+</html

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Energy Dashboard</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            background-color: #f4f4f4;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .dark-mode {
+            background-color: #121212;
+            color: white;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #343a40;
+            color: white;
+            position: fixed;
+            height: 100%;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+        .sidebar h3 {
+            text-align: center;
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar ul li {
+            margin: 15px 0;
+        }
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+        }
+        .main-content {
+            margin-left: 260px; /* Space for the sidebar */
+            padding: 20px;
+            overflow-y: auto; /* Allow scrolling */
+            width: calc(100% - 260px); /* Adjust width */
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #333;
+        }
+        canvas {
+            width: 100% !important; /* Ensure canvas takes full width */
+            height: 300px !important; /* Fixed height for charts */
+        }
+        #darkModeToggle {
+            position: absolute; /* Change to absolute positioning */
+            top: 20px; /* Adjust the top position */
+            right: 20px; /* Adjust the right position */
+            z-index: 1000; /* Ensure it appears above other elements */
+            padding: 10px 15px; /* Adjust padding for a better size */
+            border-radius: 5px; /* Rounded corners */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h3>⚡ Energy Monitor</h3>
+        <ul>
+            <li><a href="index.html">🏠 Home</a></li>
+            <li><a href="dashboard.html">📊 Dashboard</a></li>
+            <li><a href="settings.html">⚙️ Settings</a></li>
+            <li><a href="reports.html">📜 Reports</a></li>
+            <li><a href="logout.html">🚪 Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1 style="text-align: center;">Smart Home Energy Dashboard</h1>
+
+        <div style="display: flex; justify-content: space-between;">
+            <!-- Real-Time Energy Usage -->
+            <div class="card" style="flex: 1; margin-right: 10px;">
+                <h2>Real-Time Energy Usage</h2>
+                <canvas id="realTimeChart"></canvas>
+            </div>
+
+            <!-- Alerts and Notifications -->
+            <div class="card" style="flex: 1; margin-left: 10px;">
+                <h2>Alerts & Notifications</h2>
+                <div id="alerts">No alerts at this time.</div>
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between;">
+            <!-- Historical Data -->
+            <div class="card" style="flex: 1; margin-right: 10px;">
+                <h2>Historical Data</h2>
+                <canvas id="historicalChart"></canvas>
+            </div>
+
+            <!-- Energy Comparison -->
+            <div class="card" style="flex: 1; margin-left: 10px;">
+                <h2>Energy Comparison</h2>
+                <canvas id="comparisonChart"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Renewable Energy Sources</h2>
+            <div id="renewableSources">Renewable: 0% | Non-Renewable: 0%</div>
+        </div>
+
+        <div class="card">
+            <h2>Set Your Energy Budget</h2>
+            <input type="number" id="energyBudget" placeholder="Enter your budget (kWh)" value="500" />
+            <button onclick="updateGraph()">Update</button>
+        </div>
+    </div>
+
+    <button id="darkModeToggle" class="btn btn-dark">🌙 Dark Mode</button>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const darkModeToggle = document.getElementById("darkModeToggle");
+            const body = document.body;
+
+            // Check if dark mode was previously enabled
+            if (localStorage.getItem("darkMode") === "enabled") {
+                body.classList.add("dark-mode");
+            }
+
+            darkModeToggle.addEventListener("click", function () {
+                body.classList.toggle("dark-mode");
+                localStorage.setItem("darkMode", body.classList.contains("dark-mode") ? "enabled" : "disabled");
+            });
+
+            // Initialize charts
+            const ctxRealTime = document.getElementById("realTimeChart").getContext("2d");
+            const ctxHistorical = document.getElementById("historicalChart").getContext("2d");
+            const ctxComparison = document.getElementById("comparisonChart").getContext("2d");
+
+            // Sample data for charts
+            const originalData = [100, 80, 50, 120, 90]; // Example energy usage data
+            const realTimeData = [100, 120, 90, 110, 130, 150, 140];
+            const historicalData = [400, 380, 420, 450, 410, 390, 370];
+            const comparisonData = [300, 350, 400, 450, 500];
+
+            // Real-Time Energy Usage Chart
+            const realTimeChart = new Chart(ctxRealTime, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Current Energy Usage (kWh)',
+                        data: realTimeData,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        fill: true,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Historical Data Chart
+            const historicalChart = new Chart(ctxHistorical, {
+                type: 'bar',
+                data: {
+                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5'],
+                    datasets: [{
+                        label: 'Energy Usage (kWh)',
+                        data: historicalData,
+                        backgroundColor: 'rgba(153, 102, 255, 0.5)',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Energy Comparison Chart
+            const comparisonChart = new Chart(ctxComparison, {
+                type: 'pie',
+                data: {
+                    labels: ['Last Week', 'This Week'],
+                    datasets: [{
+                        label: 'Energy Comparison',
+                        data: comparisonData,
+                        backgroundColor: ['rgba(255, 99, 132, 0.5)', 'rgba(54, 162, 235, 0.5)'],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                }
+            });
+
+            // Example of setting alerts
+            function setAlerts() {
+                const alertElement = document.getElementById('alerts');
+                const budgetExceeded = false; // Change this based on your logic
+                if (budgetExceeded) {
+                    alertElement.innerText = "⚠️ Your energy budget has been exceeded!";
+                } else {
+                    alertElement.innerText = "No alerts at this time.";
+                }
+            }
+
+            setAlerts();
+
+            // Function to update renewable energy sources based on budget
+            window.updateGraph = function () {
+                let budget = parseInt(document.getElementById("energyBudget").value);
+                let totalUsage = originalData.reduce((a, b) => a + b, 0);
+                if (isNaN(budget) || budget <= 0) {
+                    alert("⚠️ Please enter a valid energy budget!");
+                    return;
+                }
+                let scaleFactor = budget < totalUsage ? budget / totalUsage : 1;
+                let newUsageData = originalData.map(val => Math.round(val * scaleFactor));
+
+                // Calculate renewable and non-renewable percentages
+                let renewablePercentage = Math.min((budget / totalUsage) * 100, 100);
+                let nonRenewablePercentage = 100 - renewablePercentage;
+
+                // Update the renewable sources display
+                document.getElementById("renewableSources").innerText = 
+                    `Renewable: ${renewablePercentage.toFixed(2)}% | Non-Renewable: ${nonRenewablePercentage.toFixed(2)}%`;
+            };
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            background-color: #f4f4f4;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .dark-mode {
+            background-color: #121212;
+            color: white;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #343a40;
+            color: white;
+            position: fixed;
+            height: 100%;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+        .sidebar h3 {
+            text-align: center;
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar ul li {
+            margin: 15px 0;
+        }
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+        }
+        .main-content {
+            margin-left: 260px; /* Space for the sidebar */
+            padding: 20px;
+            overflow-y: auto; /* Allow scrolling */
+            width: calc(100% - 260px); /* Adjust width */
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #333;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #darkModeToggle {
+            position: absolute; /* Change to absolute positioning */
+            top: 20px; /* Adjust the top position */
+            right: 20px; /* Adjust the right position */
+            z-index: 1000; /* Ensure it appears above other elements */
+            padding: 10px 15px; /* Adjust padding for a better size */
+            border-radius: 5px; /* Rounded corners */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h3>⚡ Energy Monitor</h3>
+        <ul>
+            <li><a href="index.html">🏠 Home</a></li>
+            <li><a href="dashboard.html">📊 Dashboard</a></li>
+            <li><a href="settings.html">⚙️ Settings</a></li>
+            <li><a href="reports.html">📜 Reports</a></li>
+            <li><a href="logout.html">🚪 Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1 style="text-align: center;">Settings</h1>
+
+        <div class="card">
+            <h2>User Profile</h2>
+            <input type="text" placeholder="Name" id="userName" />
+            <input type="email" placeholder="Email" id="userEmail" />
+            <input type="text" placeholder="Contact Number" id="userContact" />
+            <button onclick="saveProfile()">Save Profile</button>
+        </div>
+
+        <div class="card">
+            <h2>Energy Budget Settings</h2>
+            <input type="number" placeholder="Default Energy Budget (kWh)" id="energyBudget" />
+            <button onclick="saveBudget()">Save Budget</button>
+        </div>
+
+        <div class="card">
+            <h2>Notification Preferences</h2>
+            <select id="notificationMethod">
+                <option value="email">Email</option>
+                <option value="sms">SMS</option>
+                <option value="app">App Notifications</option>
+            </select>
+            <button onclick="saveNotifications()">Save Notifications</button>
+        </div>
+
+        <div class="card">
+            <h2>Theme Options</h2>
+            <select id="themeSelect" onchange="changeTheme()">
+                <option value="light">Light Mode</option>
+                <option value="dark">Dark Mode</option>
+            </select>
+            <button onclick="saveTheme()">Save Theme</button>
+        </div>
+
+        <div class="card">
+            <h2>Connected Devices</h2>
+            <p>Manage your connected devices here.</p>
+            <!-- You can add a list of connected devices here -->
+        </div>
+    </div>
+
+    <script>
+        // Apply the saved theme on page load
+        document.addEventListener("DOMContentLoaded", function() {
+            const savedTheme = localStorage.getItem("theme");
+            if (savedTheme) {
+                document.body.classList.toggle("dark-mode", savedTheme === "dark");
+                document.getElementById("themeSelect").value = savedTheme;
+            }
+        });
+
+        function saveProfile() {
+            const name = document.getElementById("userName").value;
+            const email = document.getElementById("userEmail").value;
+            const contact = document.getElementById("userContact").value;
+            alert(`Profile saved!\nName: ${name}\nEmail: ${email}\nContact: ${contact}`);
+        }
+
+        function saveBudget() {
+            const budget = document.getElementById("energyBudget").value;
+            alert(`Default Energy Budget saved: ${budget} kWh`);
+        }
+
+        function saveNotifications() {
+            const method = document.getElementById("notificationMethod").value;
+            alert(`Notification method saved: ${method}`);
+        }
+
+        function saveTheme() {
+            const theme = document.getElementById("themeSelect").value;
+            localStorage.setItem("theme", theme); // Save the theme in localStorage
+            changeTheme(); // Apply the theme immediately
+        }
+
+        function changeTheme() {
+            const theme = document.getElementById("themeSelect").value;
+            document.body.classList.toggle("dark-mode", theme === "dark");
+        }
+    </script>
+</body>
+</html>
